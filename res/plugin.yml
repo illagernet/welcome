@@ -1,0 +1,7 @@
+name: Welcome
+version: 1.0
+api-version: 1.14
+description: Welcome new players. Gives them a kit and reminds all other online players to welcome them.
+author: IllagerNet
+website: https://illager.net
+main: net.illager.welcome.Welcome
