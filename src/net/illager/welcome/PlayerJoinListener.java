@@ -17,7 +17,7 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if(!player.hasPlayedBefore()) {
-            player.getInventory().addItem(Welcome.kit);
+            player.getInventory().addItem(this.plugin.getKit());
             this.plugin.remindWelcome(player);
         }
     }

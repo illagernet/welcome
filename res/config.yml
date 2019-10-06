@@ -1,0 +1,16 @@
+welcome-book:
+  
+  # Displayed title of the book
+  title: Welcome Guide
+  
+  # Displayed author of the book
+  author: Server
+  
+  # Displayed generation of the book
+  # 0 = Original, 1 = Copy of Original, 2 = Copy of Copy, 3 = Tattered
+  generation: 3
+  
+  # Pages of the book
+  # Use "§x" color codes
+  pages:
+    - Edit the welcome guide in §9/plugins/welcome/config.yml§r!
