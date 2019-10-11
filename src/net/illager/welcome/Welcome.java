@@ -13,46 +13,55 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
 
-public class Welcome extends JavaPlugin {
+/**
+ * Plugin class that sends a welcome message
+ *
+ * @author IllagerNet
+ * @version v1.0.0
+ */
+public class Welcome extends JavaPlugin implements Listener {
     
     @Override
     public void onEnable() {
-        this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        this.getServer().getPluginManager().registerEvents(this, this);
         this.saveDefaultConfig();
     }
     
     @Override
     public void onDisable() {
-        // Do nothing
+        // not used
     }
-    
-    // Player joins the server
-    class PlayerJoinListener implements Listener {
-        
-        @EventHandler
-        public void onPlayerJoin(PlayerJoinEvent event) {
-            Player player = event.getPlayer();
-            
-            // New player
-            if(!player.hasPlayedBefore()) {
-                
-                // Give kit items
-                player.getInventory().addItem(getKit());
-                
-                // Remind other players to welcome the new player
-                remindWelcome(player);
-            }
+
+    /**
+     * Event Listener
+     * Fires when a player joins
+     *
+     * @param event PlayerJoinEvent Object
+     */
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if(!player.hasPlayedBefore()) { // true if player is new to the server
+            player.getInventory().addItem(getKit()); // gives the player the starter kit
+            remindWelcome(player); // reminds other players to say welcome
         }
     }
-    
-    // Prepares a welcome kit
-    ItemStack[] getKit() {
-        ItemStack[] kit = { new ItemStack(Material.TOTEM_OF_UNDYING), composeWelcomeBook() };
-        return kit;
+
+    /**
+     * Method that prepares the starter kit
+     *
+     * @return returns all the items in a ItemStack Array
+     */
+    private ItemStack[] getKit() {
+        return new ItemStack[] { new ItemStack(Material.TOTEM_OF_UNDYING), composeWelcomeBook() };
     }
-    
-    // Prepare a dynamic welcome book item
-    ItemStack composeWelcomeBook() {
+
+    /**
+     * Method that prepares a book
+     *
+     * @return the book as an ItemStack object
+     */
+    private ItemStack composeWelcomeBook() {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
         
@@ -65,16 +74,20 @@ public class Welcome extends JavaPlugin {
         meta.setGeneration(this.getGeneration(this.getConfig().getInt("welcome-book.generation")));
         
         // Add pages
-        for(String page : (List<String>) this.getConfig().getList("welcome-book.generation")) {
+        for(String page : (List<String>) this.getConfig().getList("welcome-book.generation"))
             meta.addPage(page);
-        }
         
         book.setItemMeta(meta);
         return book;
     }
-    
-    // Get a book generation from ID
-    BookMeta.Generation getGeneration(int generation) {
+
+    /**
+     * Method that gets a book generation from an ID
+     *
+     * @param generation the generation id
+     * @return the BookMeta associated with the id
+     */
+    private BookMeta.Generation getGeneration(int generation) {
         switch(generation) {
             case 0: return BookMeta.Generation.ORIGINAL;
             case 1: return BookMeta.Generation.COPY_OF_ORIGINAL;
@@ -82,17 +95,16 @@ public class Welcome extends JavaPlugin {
             default: return BookMeta.Generation.TATTERED;
         }
     }
-    
-    // Remind other players to welcome the new player
-    void remindWelcome(Player newPlayer) {
-        
-        // For each player online
-        for(Player player : this.getServer().getOnlinePlayers()) {
-            
-            // Not the new player
-            if(!player.getUniqueId().toString().equals(newPlayer.getUniqueId().toString())) {
+
+    /**
+     * Loops through all the online players and sends a welcome
+     * message to all the players (except the new player)
+     *
+     * @param newPlayer the new player
+     */
+    private void remindWelcome(Player newPlayer) {
+        for(Player player : this.getServer().getOnlinePlayers())
+            if(!player.getUniqueId().toString().equals(newPlayer.getUniqueId().toString()))
                 player.sendMessage(ChatColor.GOLD + "Welcome " + ChatColor.WHITE + newPlayer.getDisplayName() + ChatColor.GOLD + " to the server!");
-            }
-        }
     }
 }
