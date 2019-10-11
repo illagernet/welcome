@@ -4,7 +4,7 @@ spigot='spigot-1.14.4.jar'
 name='Welcome'
 version='1.0.0'
 
-# Download Dependancies
+# Download dependencies
 mkdir -p lib
 if test ! -f lib/$spigot; then
     echo "Downloading Spigot"
